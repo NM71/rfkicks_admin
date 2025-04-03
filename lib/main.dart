@@ -164,14 +164,14 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'Outfit',
       ),
-      home: AdminLoginScreen(),
+      home: const AdminLoginScreen(),
       routes: {
-        '/admin-login': (context) => AdminLoginScreen(),
-        '/admin-dashboard': (context) => AdminDashboardScreen(),
-        '/admin-services': (context) => AdminServicesScreen(),
-        '/admin-users': (context) => AdminUsersScreen(),
-        '/admin-analytics': (context) => AdminAnalyticsScreen(),
-        '/admin-orders': (context) => AdminOrdersScreen(),
+        '/admin-login': (context) => const AdminLoginScreen(),
+        '/admin-dashboard': (context) => const AdminDashboardScreen(),
+        '/admin-services': (context) => const AdminServicesScreen(),
+        '/admin-users': (context) => const AdminUsersScreen(),
+        '/admin-analytics': (context) => const AdminAnalyticsScreen(),
+        '/admin-orders': (context) => const AdminOrdersScreen(),
       },
     );
   }
