@@ -1,7 +1,6 @@
-
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 
 class ApiService {
   static const String baseUrl = 'https://rfkicks.com/api';
@@ -61,7 +60,9 @@ class ApiService {
         return false;
       }
     } catch (e) {
-      print('Error validating token: $e');
+      if (kDebugMode) {
+        print('Error validating token: $e');
+      }
       return false;
     }
   }
@@ -86,7 +87,8 @@ class ApiService {
     }
   }
 
-  static Future<bool> updateUserProfile(String token, Map<String, dynamic> profileData) async {
+  static Future<bool> updateUserProfile(
+      String token, Map<String, dynamic> profileData) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/update_user_profile'),
@@ -97,8 +99,10 @@ class ApiService {
         },
       ).timeout(timeoutDuration);
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');  // Add this line
+      if (kDebugMode) {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
 
       if (response.statusCode == 200) {
         return true;
@@ -106,9 +110,10 @@ class ApiService {
         throw Exception('Failed to update profile: ${response.body}');
       }
     } catch (e) {
-      print('Error updating profile: $e'); // Debug log
+      if (kDebugMode) {
+        print('Error updating profile: $e');
+      }
       throw Exception('Error updating profile: $e');
     }
   }
-
 }

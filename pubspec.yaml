@@ -48,6 +48,7 @@ dependencies:
   shimmer: ^3.0.0
   charts_flutter: ^0.12.0
   connectivity_plus: ^6.1.0
+  fl_chart: ^0.69.2
 
 dev_dependencies:
   flutter_test:
@@ -75,8 +76,6 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/images/services_images/
-    - assets/images/carousel_images/
     - assets/fonts/
     - assets/icons/
 

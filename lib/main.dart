@@ -1,10 +1,11 @@
 import 'dart:async';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rfkicks_admin/views/admin_analytics_screen.dart';
 import 'package:rfkicks_admin/views/admin_dashboard_screen.dart';
 import 'package:rfkicks_admin/views/admin_login_screen.dart';
+import 'package:rfkicks_admin/views/admin_orders_screen.dart';
 import 'package:rfkicks_admin/views/admin_services_screen.dart';
 import 'package:rfkicks_admin/views/admin_users_screen.dart';
 
@@ -20,15 +21,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   // Internet Connectivity Checker
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   final Connectivity _connectivity = Connectivity();
   bool _isSnackbarActive = false;
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
-
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -39,7 +38,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _checkInitialConnectivity() async {
     final List<ConnectivityResult> result =
-    await _connectivity.checkConnectivity();
+        await _connectivity.checkConnectivity();
     _updateConnectionStatus(result.first); // Use the first result
   }
 
@@ -155,24 +154,24 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
     );
 
     return MaterialApp(
       scaffoldMessengerKey: _scaffoldMessengerKey,
-
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Outfit',
       ),
-      home: AdminDashboardScreen(),
+      home: AdminLoginScreen(),
       routes: {
         '/admin-login': (context) => AdminLoginScreen(),
         '/admin-dashboard': (context) => AdminDashboardScreen(),
         '/admin-services': (context) => AdminServicesScreen(),
         '/admin-users': (context) => AdminUsersScreen(),
+        '/admin-analytics': (context) => AdminAnalyticsScreen(),
+        '/admin-orders': (context) => AdminOrdersScreen(),
       },
     );
   }

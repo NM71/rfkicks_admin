@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rfkicks_admin/services/admin_api_service.dart';
 
 class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({super.key});
+
   @override
   _AdminLoginScreenState createState() => _AdminLoginScreenState();
 }
@@ -20,30 +22,19 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            const Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    opacity: 0.5,
-                    image: AssetImage('assets/images/rfkicks_bg.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
             SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Image.asset(
                       'assets/images/rfkicks_logo.png',
                       height: 100,
                       width: 100,
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Admin Portal',
                       style: TextStyle(
                         fontSize: 32,
@@ -51,47 +42,51 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           TextFormField(
                             controller: _usernameController,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               labelText: 'Username',
-                              labelStyle: TextStyle(color: Colors.white70),
-                              prefixIcon:
-                                  Icon(Icons.person, color: Colors.white70),
+                              labelStyle:
+                                  const TextStyle(color: Colors.white70),
+                              prefixIcon: const Icon(Icons.person,
+                                  color: Colors.white70),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
-                                borderSide: BorderSide(color: Colors.white70),
+                                borderSide:
+                                    const BorderSide(color: Colors.white70),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
-                                borderSide: BorderSide(color: Colors.white70),
+                                borderSide:
+                                    const BorderSide(color: Colors.white70),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
                                 borderSide:
-                                    BorderSide(color: Color(0xff3c76ad)),
+                                    const BorderSide(color: Color(0xff3c76ad)),
                               ),
                             ),
                             validator: (value) => value?.trim().isEmpty ?? true
                                 ? 'Username required'
                                 : null,
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
                               labelText: 'Password',
-                              labelStyle: TextStyle(color: Colors.white70),
+                              labelStyle:
+                                  const TextStyle(color: Colors.white70),
                               prefixIcon:
-                                  Icon(Icons.lock, color: Colors.white70),
+                                  const Icon(Icons.lock, color: Colors.white70),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword
@@ -107,32 +102,34 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
-                                borderSide: BorderSide(color: Colors.white70),
+                                borderSide:
+                                    const BorderSide(color: Colors.white70),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
-                                borderSide: BorderSide(color: Colors.white70),
+                                borderSide:
+                                    const BorderSide(color: Colors.white70),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
                                 borderSide:
-                                    BorderSide(color: Color(0xff3c76ad)),
+                                    const BorderSide(color: Color(0xff3c76ad)),
                               ),
                             ),
                             validator: (value) => value?.isEmpty ?? true
                                 ? 'Password required'
                                 : null,
                           ),
-                          SizedBox(height: 40),
+                          const SizedBox(height: 40),
                           ElevatedButton(
                             onPressed: _isLoading ? null : _handleLogin,
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.all(16),
-                              backgroundColor: Color(0xff3c76ad),
+                              backgroundColor: const Color(0xff3c76ad),
                               foregroundColor: const Color(0xffffffff),
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(6),
                               ),
                             ),
                             child: _isLoading
@@ -172,8 +169,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       Navigator.pushReplacementNamed(context, '/admin-dashboard');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
+        const SnackBar(
+          // content: Text(e.toString()),
+          content: Text(
+              'Unable to login. Please check your internet and try again.'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),

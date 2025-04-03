@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rfkicks_admin/services/admin_api_service.dart';
 import 'package:rfkicks_admin/views/custom_widgets/custom_snackbar.dart';
-import 'package:rfkicks_admin/views/custom_widgets/my_button.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminUsersScreen extends StatefulWidget {
+  const AdminUsersScreen({super.key});
+
   @override
   _AdminUsersScreenState createState() => _AdminUsersScreenState();
 }
@@ -13,6 +14,11 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   List<UserData> users = [];
   bool isLoading = true;
   String? error;
+  String _searchQuery = '';
+  String _statusFilter = 'All';
+  List<UserData> _filteredUsers = [];
+  final TextEditingController _searchController = TextEditingController();
+  final List<String> _statusOptions = ['All', 'Active', 'Inactive'];
 
   @override
   void initState() {
@@ -25,6 +31,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
       final fetchedUsers = await AdminApiService.getUsers();
       setState(() {
         users = fetchedUsers;
+        _filteredUsers = List.from(fetchedUsers);
         isLoading = false;
       });
     } catch (e) {
@@ -35,18 +42,49 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     }
   }
 
+// Filter users based on search query and status filter
+  void _filterUsers() {
+    setState(() {
+      _filteredUsers = users.where((user) {
+        bool matchesSearch = user.id
+                .toString()
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            user.displayName
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().contains(_searchQuery.toLowerCase());
+
+        bool matchesStatus = _statusFilter == 'All' ||
+            (_statusFilter == 'Active' && user.status == 0) ||
+            (_statusFilter == 'Inactive' && user.status == 1);
+
+        return matchesSearch && matchesStatus;
+      }).toList();
+    });
+  }
+
+// User Count
+  Map<String, int> _getUserCounts() {
+    return {
+      'All': users.length,
+      'Active': users.where((user) => user.status == 0).length,
+      'Inactive': users.where((user) => user.status == 1).length,
+    };
+  }
+
   Future<void> _handleDeleteUser(UserData user) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         backgroundColor: const Color(0xccf2f2f2),
-        title: Text('Delete User'),
+        title: const Text('Delete User'),
         content: Text('Are you sure you want to delete ${user.displayName}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel',
+            child: const Text('Cancel',
                 style: TextStyle(color: Colors.black, fontSize: 17)),
           ),
           ElevatedButton(
@@ -58,11 +96,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
-              child: Text('Delete')),
-          // TextButton(
-          //   onPressed: () => Navigator.pop(context, true),
-          //   child: Text('Delete', style: TextStyle(color: Colors.red)),
-          // ),
+              child: const Text('Delete')),
         ],
       ),
     );
@@ -74,7 +108,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           context: context,
           message: 'User deleted successfully',
         );
-        loadUsers(); // Refresh the list
+        loadUsers();
       } catch (e) {
         CustomSnackbar.show(
           context: context,
@@ -105,18 +139,18 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 // Shimmer Effect
   Widget _buildShimmerEffect() {
     return ListView.builder(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       itemCount: 8,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey[500]!,
-          highlightColor: Colors.grey[300]!,
+          baseColor: Colors.grey[800]!,
+          highlightColor: Colors.grey[600]!,
           child: Card(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            color: Colors.white.withOpacity(0.75),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            color: Colors.white.withOpacity(0.1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
-              side: BorderSide(
+              side: const BorderSide(
                 color: Color(0xff3c76ad),
                 width: 0.5,
               ),
@@ -124,7 +158,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ExpansionTile(
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   radius: 25,
                   backgroundColor: Colors.white,
                 ),
@@ -136,7 +170,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                 subtitle: Container(
                   height: 16,
                   width: 160,
-                  margin: EdgeInsets.only(top: 8),
+                  margin: const EdgeInsets.only(top: 8),
                   color: Colors.white,
                 ),
                 trailing: Container(
@@ -154,8 +188,9 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
   // Header
   Widget _buildHeader() {
+    final counts = _getUserCounts();
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -163,20 +198,24 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 'User Management',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               IconButton(
-                icon: Icon(Icons.refresh, color: Colors.white),
+                icon: const Icon(Icons.refresh, color: Colors.white),
                 onPressed: () {
                   setState(() {
                     isLoading = true;
@@ -189,11 +228,91 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 16),
             child: Text(
-              'Total Users: ${users.length}',
-              style: TextStyle(
+              // 'User Count: ${counts[_statusFilter]} (Total: ${counts['All']} | Active: ${counts['Active']} | Inactive: ${counts['Inactive']})',
+              'User Count: ${counts[_statusFilter]} (Active: ${counts['Active']} | Inactive: ${counts['Inactive']})',
+              style: const TextStyle(
                 color: Colors.white70,
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Search and Filter
+  Widget _buildFilters() {
+    return Container(
+      color: Colors.white.withOpacity(0.1),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          TextField(
+            controller: _searchController,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Search by Name, Email or ID',
+              hintStyle: const TextStyle(color: Colors.white70),
+              prefixIcon: const Icon(Icons.search, color: Colors.white70),
+              suffixIcon: _searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear, color: Colors.white70),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                          _searchQuery = '';
+                          _filterUsers();
+                        });
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white30),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+                _filterUsers();
+              });
+            },
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white30),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _statusFilter,
+                isExpanded: true,
+                dropdownColor: Colors.black87,
+                style: const TextStyle(color: Colors.white),
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+                items: _statusOptions.map((String status) {
+                  return DropdownMenuItem(
+                    value: status,
+                    child: Text(status),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _statusFilter = newValue!;
+                    _filterUsers();
+                  });
+                },
               ),
             ),
           ),
@@ -219,42 +338,32 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
               ),
             ),
           ),
-          // if (isLoading)
-          //   Center(
-          //     child: CircularProgressIndicator(
-          //       color: Color(0xff3c76ad),
-          //     ),
-          //   )
           SafeArea(
               child: Column(
             children: [
               _buildHeader(),
+              _buildFilters(),
               Expanded(
                 child: isLoading
                     ? _buildShimmerEffect()
                     : error != null
-                        ? Center(
+                        ? const Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  error!,
+                                  'Could not load users, Reload the page',
                                   style: TextStyle(color: Colors.white),
                                   textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 20),
-                                MyButton(
-                                  text: 'Retry',
-                                  onTap: loadUsers,
                                 ),
                               ],
                             ),
                           )
                         : ListView.builder(
-                            padding: EdgeInsets.all(16),
-                            itemCount: users.length,
+                            padding: const EdgeInsets.all(16),
+                            itemCount: _filteredUsers.length,
                             itemBuilder: (context, index) {
-                              final user = users[index];
+                              final user = _filteredUsers[index];
                               return UserCard(
                                 user: user,
                                 onDelete: () => _handleDeleteUser(user),
@@ -278,37 +387,37 @@ class UserCard extends StatelessWidget {
   final Function(int) onUpdateStatus;
 
   const UserCard({
-    Key? key,
+    super.key,
     required this.user,
     required this.onDelete,
     required this.onUpdateStatus,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      color: Colors.white.withOpacity(0.75),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      color: Colors.white.withOpacity(0.1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),
-        side: BorderSide(
+        side: const BorderSide(
           color: Color(0xff3c76ad),
-          width: 0.5,
+          width: 1,
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ExpansionTile(
           leading: CircleAvatar(
-            radius: 25,
-            backgroundColor: Color(0xff3c76ad),
+            radius: 30,
+            backgroundColor: const Color(0xff3c76ad),
             backgroundImage: user.profilePicture != null
                 ? NetworkImage(user.profilePicture!)
                 : null,
             child: user.profilePicture == null
                 ? Text(
                     user.displayName[0].toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -318,40 +427,41 @@ class UserCard extends StatelessWidget {
           ),
           title: Text(
             user.displayName,
-            style: TextStyle(
-              fontSize: 18,
+            style: const TextStyle(
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xff3c76ad),
+              color: Colors.white,
             ),
           ),
           subtitle: Text(
             user.email,
             style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[700],
+              fontSize: 13,
+              color: Colors.grey[300],
             ),
           ),
           trailing: PopupMenuButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.more_vert,
               color: Color(0xff3c76ad),
             ),
             itemBuilder: (context) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'view',
                 child: ListTile(
-                  leading: Icon(Icons.visibility, color: Color(0xff3c76ad)),
+                  leading:
+                      Icon(Icons.visibility_outlined, color: Color(0xff3c76ad)),
                   title: Text('View Details'),
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'status',
                 child: ListTile(
                   leading: Icon(Icons.toggle_on, color: Color(0xff3c76ad)),
                   title: Text('Toggle Status'),
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'delete',
                 child: ListTile(
                   leading: Icon(Icons.delete, color: Colors.red),
@@ -375,10 +485,10 @@ class UserCard extends StatelessWidget {
           ),
           children: [
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
@@ -417,7 +527,7 @@ class UserCard extends StatelessWidget {
         builder: (context) => AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          title: Text('User Details'),
+          title: const Text('User Details'),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,7 +552,7 @@ class UserCard extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         ),
@@ -458,15 +568,15 @@ class UserCard extends StatelessWidget {
 
   Widget _buildInfoRow(String label, String value, {Color? textColor}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: 120,
             child: Text(
-              label + ':',
-              style: TextStyle(
+              '$label:',
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xff3c76ad),
                 fontSize: 13,
@@ -513,7 +623,7 @@ class UserData {
     this.shoeSize,
     this.bio,
     this.dateOfBirth,
-    required this.status, // Added to constructor
+    required this.status,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -524,7 +634,7 @@ class UserData {
       displayName: json['display_name'],
       registered: json['user_registered'],
       profilePicture: json['profile_picture'] != null
-          ? 'https://rfkicks.com/api/${json['profile_picture']}' // Add base URL
+          ? 'https://rfkicks.com/api/${json['profile_picture']}'
           : null,
       address: json['address'],
       shoeSize: json['shoe_size'],
