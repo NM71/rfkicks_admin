@@ -16,11 +16,13 @@ It includes:
     <td>Admin Dashboard</td>
      <td>Manage Services</td>
      <td>Edit Service</td>
+     <td>Manage Users</td>
   </tr>
   <tr>
     <td><img src="screenshots/1.jpg" width=270 height=480></td>
-    <td><img src="screenshots/Picture2.png" width=270 height=480></td>
-    <td><img src="screenshots/Picture3.png" width=270 height=480></td>
+    <td><img src="screenshots/2.jpg" width=270 height=480></td>
+    <td><img src="screenshots/3.jpg" width=270 height=480></td>
+    <td><img src="screenshots/4.jpg" width=270 height=480></td>
   </tr>
   <br>
   <tr>
