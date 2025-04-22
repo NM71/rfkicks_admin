@@ -19,9 +19,9 @@ It includes:
      
   </tr>
   <tr>
-    <td><img src="screenshots/1.jpg" width=270 height=480></td>
-    <td><img src="screenshots/2.jpg" width=270 height=480></td>
-    <td><img src="screenshots/3.jpg" width=270 height=480></td>
+    <td><img src="screenshots/1.jpg" width=300 height=480></td>
+    <td><img src="screenshots/2.jpg" width=300 height=480></td>
+    <td><img src="screenshots/3.jpg" width=300 height=480></td>
     
   </tr>
   <br>
@@ -32,8 +32,8 @@ It includes:
 
   </tr>
   <tr>
-    <td><img src="screenshots/4.jpg" width=270 height=480></td>
-    <td><img src="screenshots/5.jpg" width=270 height=480></td>
-    <td><img src="screenshots/6.jpg" width=270 height=480></td>
+    <td><img src="screenshots/4.jpg" width=300 height=480></td>
+    <td><img src="screenshots/5.jpg" width=300 height=480></td>
+    <td><img src="screenshots/6.jpg" width=300 height=480></td>
   </tr>
  </table>
