@@ -1,16 +1,36 @@
-# rfkicks_admin
+# RFK_Admin
 
-Admin App for ReFreshKicks
+Admin App for RefreshKicks (A shoe cleaning service)
 
-## Getting Started
+It includes: 
+- Admin Dashboard
+- Services Management
+- Orders Management
+- User Management
+- Business Analytics
+  
+#### App Screenshots
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<table>
+  <tr>
+    <td>Admin Dashboard</td>
+     <td>Manage Services</td>
+     <td>Edit Service</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/1.jpg" width=270 height=480></td>
+    <td><img src="screenshots/Picture2.png" width=270 height=480></td>
+    <td><img src="screenshots/Picture3.png" width=270 height=480></td>
+  </tr>
+  <br>
+  <tr>
+    <td>Filters Screen</td>
+     <td>Favorites Screen</td>
+     <td>Drawer</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/Picture4.png" width=270 height=480></td>
+    <td><img src="screenshots/Picture5.png" width=270 height=480></td>
+    <td><img src="screenshots/Picture6.png" width=270 height=480></td>
+  </tr>
+ </table>
